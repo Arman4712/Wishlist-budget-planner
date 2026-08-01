@@ -54,3 +54,5 @@ js/app.js         App logic: wishlist, months, budgets, persistence
 
 - Prices and adjustments are in **Indian Rupees (₹)**.
 - Resetting data is permanent and cannot be undone.
+
+..
