@@ -704,6 +704,14 @@
   $('#addProductBtn').addEventListener('click', openAddModal);
   $('#wishlistEmpty .btn').addEventListener('click', openAddModal);
 
+  if (navigator.storage && navigator.storage.persist) {
+    navigator.storage.persist().then((granted) => {
+      console.log(granted
+        ? 'Storage will persist and not be cleared automatically.'
+        : 'Storage is not explicitly persistent.');
+    }).catch(() => {});
+  }
+
   renderWishlist();
   renderMonthTabs();
   renderPlanner();
