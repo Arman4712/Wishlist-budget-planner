@@ -1070,6 +1070,80 @@ input[type="number"], input[type="text"], input[type="url"] {
 
 .pick-list .empty-state { padding: 30px 20px; }
 
+/* ============ DATA (EXPORT / IMPORT) ============ */
+.data-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.data-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+}
+
+.data-card:hover { border-color: var(--border-strong); background: rgba(255, 255, 255, 0.08); transform: translateY(-2px); }
+.data-card:active { transform: scale(0.98); }
+
+.data-card svg { width: 22px; height: 22px; color: var(--primary-2); flex-shrink: 0; }
+.data-card span { font-weight: 500; font-size: 0.8rem; color: var(--text-dim); line-height: 1.45; }
+
+.data-subhead { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.data-subhead h4 { font-size: 1.05rem; font-weight: 800; }
+
+.format-options { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.format-options .btn.active { color: #fff; background: var(--grad-primary); box-shadow: 0 6px 20px rgba(124, 108, 255, 0.4); }
+
+.data-preview label {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-faint);
+  margin-bottom: 7px;
+}
+
+.data-preview textarea,
+#importArea {
+  width: 100%;
+  min-height: 180px;
+  resize: vertical;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.data-preview textarea:focus,
+#importArea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(124, 108, 255, 0.2); }
+
+#importArea { min-height: 150px; }
+
+@media (max-width: 600px) {
+  .data-options { grid-template-columns: 1fr; }
+}
+
 /* ============ TOASTS ============ */
 .toast-wrap {
   position: fixed;
@@ -1301,6 +1375,10 @@ input[type="number"], input[type="text"], input[type="url"] {
         </button>
       </nav>
       <div class="header-actions">
+        <button class="btn btn-ghost" id="exportDataBtn" title="Export or import your data">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/></svg>
+          Export / Import
+        </button>
         <button class="btn btn-ghost" id="clearDataBtn" title="Reset all data">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
           Reset
@@ -1493,6 +1571,66 @@ input[type="number"], input[type="text"], input[type="url"] {
     </div>
   </div>
 
+  <!-- ============ EXPORT / IMPORT ============ -->
+  <div class="modal-overlay" id="dataModal">
+    <div class="modal glass">
+      <div class="modal-head">
+        <h3>Export / Import</h3>
+        <button class="icon-btn modal-close" data-close>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div id="dataMenu">
+        <p class="modal-body-text">Save your wishlist to your notes app, or restore it from a previous export.</p>
+        <div class="data-options">
+          <button class="data-card" data-mode="export">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/></svg>
+            Export Wishlist
+            <span>Copy or download your items, links &amp; prices</span>
+          </button>
+          <button class="data-card" data-mode="import">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 8l5-5 5 5"/><path d="M12 3v12"/></svg>
+            Import Wishlist
+            <span>Restore from a text, CSV or JSON export</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="exportPanel" style="display:none">
+        <div class="data-subhead">
+          <button class="btn btn-ghost btn-sm data-back">Back</button>
+          <h4>Export format</h4>
+        </div>
+        <div class="format-options">
+          <button class="btn btn-ghost" data-fmt="text">Plain Text</button>
+          <button class="btn btn-ghost" data-fmt="csv">CSV</button>
+          <button class="btn btn-ghost" data-fmt="json">JSON</button>
+        </div>
+        <div class="data-preview">
+          <label>Preview</label>
+          <textarea id="exportPreview" readonly></textarea>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-ghost" id="copyExportBtn">Copy</button>
+          <button class="btn btn-primary" id="downloadExportBtn">Download</button>
+        </div>
+      </div>
+
+      <div id="importPanel" style="display:none">
+        <div class="data-subhead">
+          <button class="btn btn-ghost btn-sm data-back">Back</button>
+          <h4>Paste your exported data</h4>
+        </div>
+        <p class="modal-body-text">Supports JSON (full restore), CSV or plain text. Importing replaces your current wishlist.</p>
+        <textarea id="importArea" placeholder="Paste the exported text here..."></textarea>
+        <div class="modal-actions">
+          <button class="btn btn-primary" id="confirmImportBtn">Import</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ============ TOASTS ============ -->
   <div class="toast-wrap" id="toastWrap"></div>
 
@@ -1531,7 +1669,7 @@ input[type="number"], input[type="text"], input[type="url"] {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const d = JSON.parse(raw);
-        if (d && Array.isArray(d.wishlist) && Array.isArray(d.months)) return d;
+        if (d && Array.isArray(d.wishlist) && Array.isArray(d.months) && d.months.length) return d;
       }
     } catch (e) { /* corrupted */ }
     return { wishlist: [], months: defaultMonths() };
@@ -2196,6 +2334,193 @@ input[type="number"], input[type="text"], input[type="url"] {
     renderMonthTabs();
     renderPlanner();
     toast('All data has been reset', 'info');
+  });
+
+  // ---------- Export / Import ----------
+
+  const dataModal = $('#dataModal');
+  const dataMenu = $('#dataMenu');
+  const exportPanel = $('#exportPanel');
+  const importPanel = $('#importPanel');
+  const exportPreview = $('#exportPreview');
+  const importArea = $('#importArea');
+  const fmtMeta = {
+    text: { name: 'wishlist.txt', mime: 'text/plain' },
+    csv: { name: 'wishlist.csv', mime: 'text/csv' },
+    json: { name: 'wishlynk-backup.json', mime: 'application/json' }
+  };
+  let currentExport = '';
+  let currentExportName = '';
+
+  function showDataPanel(which) {
+    dataMenu.style.display = which === 'menu' ? '' : 'none';
+    exportPanel.style.display = which === 'export' ? '' : 'none';
+    importPanel.style.display = which === 'import' ? '' : 'none';
+    if (which === 'import') importArea.value = '';
+  }
+
+  $('#exportDataBtn').addEventListener('click', () => {
+    showDataPanel('menu');
+    openModal(dataModal);
+  });
+
+  dataMenu.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-mode]');
+    if (!btn) return;
+    if (btn.dataset.mode === 'export') {
+      if (!state.wishlist.length) { toast('Your wishlist is empty. Add products first.', 'error'); return; }
+      buildExport('text');
+      showDataPanel('export');
+    } else {
+      showDataPanel('import');
+      setTimeout(() => importArea.focus(), 60);
+    }
+  });
+
+  $$('.data-back').forEach((btn) => btn.addEventListener('click', () => showDataPanel('menu')));
+
+  exportPanel.addEventListener('click', (e) => {
+    const fmtBtn = e.target.closest('[data-fmt]');
+    if (fmtBtn) buildExport(fmtBtn.dataset.fmt);
+  });
+
+  function buildExport(f) {
+    if (f === 'csv') {
+      const esc = (v) => '"' + String(v).replace(/"/g, '""') + '"';
+      const rows = [['Name', 'Price (INR)', 'Link'].join(',')];
+      state.wishlist.forEach((p) => rows.push([esc(p.name), String(p.price), esc(p.link)].join(',')));
+      currentExport = rows.join('\n');
+    } else if (f === 'json') {
+      currentExport = JSON.stringify(state, null, 2);
+    } else {
+      const lines = ['My Wishlist'];
+      state.wishlist.forEach((p, i) => {
+        lines.push((i + 1) + '. ' + p.name);
+        lines.push('   Price: ' + fmt(p.price));
+        lines.push('   Link: ' + p.link);
+      });
+      currentExport = lines.join('\n');
+    }
+    currentExportName = fmtMeta[f].name;
+    exportPreview.value = currentExport;
+    $$('.format-options .btn').forEach((b) => b.classList.toggle('active', b.dataset.fmt === f));
+  }
+
+  $('#copyExportBtn').addEventListener('click', () => {
+    if (!currentExport) return;
+    copyText(currentExport, 'Copied. Paste it into your notes.');
+  });
+
+  $('#downloadExportBtn').addEventListener('click', () => {
+    if (!currentExport) return;
+    const blob = new Blob([currentExport], { type: fmtMeta[Object.keys(fmtMeta).find((k) => fmtMeta[k].name === currentExportName)].mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = currentExportName;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+    toast('Downloaded ' + currentExportName, 'info');
+  });
+
+  function parseCSVLine(line) {
+    const out = [];
+    let cur = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (inQ) {
+        if (ch === '"') {
+          if (line[i + 1] === '"') { cur += '"'; i++; }
+          else inQ = false;
+        } else cur += ch;
+      } else if (ch === '"') inQ = true;
+      else if (ch === ',') { out.push(cur); cur = ''; }
+      else cur += ch;
+    }
+    out.push(cur);
+    return out;
+  }
+
+  function sanitizeState(d) {
+    const wishlist = (d.wishlist || []).filter((p) => p && p.name).map((p) => ({
+      id: p.id || uid(),
+      name: String(p.name),
+      price: num(p.price),
+      link: String(p.link || '')
+    }));
+    const months = (d.months && d.months.length)
+      ? d.months.map((m) => ({
+          id: m.id || uid(),
+          name: String(m.name || 'Month'),
+          budget: num(m.budget),
+          items: m.items && typeof m.items === 'object' ? m.items : {}
+        }))
+      : defaultMonths();
+    return { wishlist, months };
+  }
+
+  function parseImport(text) {
+    const t = text.trim();
+    try {
+      const parsed = JSON.parse(t);
+      if (parsed && Array.isArray(parsed.wishlist) && Array.isArray(parsed.months)) {
+        const clean = sanitizeState(parsed);
+        return { ok: true, state: clean, msg: 'Imported ' + clean.wishlist.length + ' product' + (clean.wishlist.length === 1 ? '' : 's') + ' (full restore)' };
+      }
+    } catch (e) { /* not JSON */ }
+
+    const lines = t.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+
+    // CSV (header: Name, Price, Link)
+    if (lines.length) {
+      const header = parseCSVLine(lines[0]).map((c) => c.trim().toLowerCase());
+      if (header.length >= 2 && header[0].includes('name') && header.some((h) => h.includes('price'))) {
+        const items = [];
+        for (let i = 1; i < lines.length; i++) {
+          const cols = parseCSVLine(lines[i]).map((c) => c.trim());
+          if (cols.length < 2 || !cols[0]) continue;
+          items.push({ id: uid(), name: cols[0], price: num(cols[1].replace(/[^\d.]/g, '')), link: (cols[2] || '').trim() });
+        }
+        if (items.length) return { ok: true, state: { wishlist: items, months: defaultMonths() }, msg: 'Imported ' + items.length + ' product' + (items.length === 1 ? '' : 's') + ' from CSV' };
+      }
+    }
+
+    // Notes / plain text format
+    const items = [];
+    let cur = null;
+    const push = () => { if (cur && cur.name) { items.push(cur); cur = null; } };
+    for (const line of lines) {
+      if (/^[=\-*_]{3,}$/.test(line)) continue;
+      if (/^(my\s*wish(?:list)?|wishlist)$/i.test(line)) continue;
+      const nameMatch = line.match(/^\d+[.)]\s*(.+)$/);
+      const priceMatch = line.match(/^Price:\s*(.+)$/i);
+      const linkMatch = line.match(/^Link:\s*(.+)$/i);
+      if (nameMatch) { push(); cur = { name: nameMatch[1].trim(), price: 0, link: '' }; }
+      else if (priceMatch && cur) cur.price = num(priceMatch[1].replace(/[^\d.]/g, ''));
+      else if (linkMatch && cur) cur.link = linkMatch[1].trim();
+      else if (!cur) cur = { name: line, price: 0, link: '' };
+    }
+    push();
+    if (items.length) return { ok: true, state: { wishlist: items, months: defaultMonths() }, msg: 'Imported ' + items.length + ' product' + (items.length === 1 ? '' : 's') + ' from text' };
+
+    return { ok: false, msg: 'Could not understand that data. Paste a JSON, CSV or text export.' };
+  }
+
+  $('#confirmImportBtn').addEventListener('click', () => {
+    const text = importArea.value.trim();
+    if (!text) { toast('Paste some data first.', 'error'); return; }
+    const res = parseImport(text);
+    if (!res.ok) { toast(res.msg, 'error'); return; }
+    state = res.state;
+    currentMonth = 0;
+    save();
+    closeModal(dataModal);
+    renderWishlist();
+    renderMonthTabs();
+    renderPlanner();
+    toast(res.msg);
   });
 
   // ---------- Init ----------

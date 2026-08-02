@@ -1051,6 +1051,80 @@ input[type="number"], input[type="text"], input[type="url"] {
 
 .pick-list .empty-state { padding: 30px 20px; }
 
+/* ============ DATA (EXPORT / IMPORT) ============ */
+.data-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.data-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+}
+
+.data-card:hover { border-color: var(--border-strong); background: rgba(255, 255, 255, 0.08); transform: translateY(-2px); }
+.data-card:active { transform: scale(0.98); }
+
+.data-card svg { width: 22px; height: 22px; color: var(--primary-2); flex-shrink: 0; }
+.data-card span { font-weight: 500; font-size: 0.8rem; color: var(--text-dim); line-height: 1.45; }
+
+.data-subhead { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.data-subhead h4 { font-size: 1.05rem; font-weight: 800; }
+
+.format-options { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.format-options .btn.active { color: #fff; background: var(--grad-primary); box-shadow: 0 6px 20px rgba(124, 108, 255, 0.4); }
+
+.data-preview label {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-faint);
+  margin-bottom: 7px;
+}
+
+.data-preview textarea,
+#importArea {
+  width: 100%;
+  min-height: 180px;
+  resize: vertical;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.data-preview textarea:focus,
+#importArea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(124, 108, 255, 0.2); }
+
+#importArea { min-height: 150px; }
+
+@media (max-width: 600px) {
+  .data-options { grid-template-columns: 1fr; }
+}
+
 /* ============ TOASTS ============ */
 .toast-wrap {
   position: fixed;
