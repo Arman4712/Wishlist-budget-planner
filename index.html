@@ -10,6 +10,8 @@
   <meta name="apple-mobile-web-app-title" content="WishLynk" />
   <meta name="format-detection" content="telephone=no" />
   <title>WishLynk - Wishlist & Budget Planner</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -2211,6 +2213,14 @@ input[type="number"], input[type="text"], input[type="url"] {
   renderWishlist();
   renderMonthTabs();
   renderPlanner();
+
+  // Register the service worker so the app can be installed as a PWA
+  // and work offline.
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    });
+  }
 })();
 
   </script>
