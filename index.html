@@ -364,12 +364,13 @@ body {
 /* ============ WISHLIST ============ */
 .wishlist-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
   gap: 16px;
 }
 
 .product-card {
   position: relative;
+  min-width: 0;
   padding: 18px;
   border-radius: var(--radius);
   background: var(--card);
@@ -482,6 +483,7 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
   background: rgba(0, 0, 0, 0.25);
   border: 1px solid var(--border);
   border-radius: 11px;
@@ -1150,7 +1152,7 @@ input[type="number"], input[type="text"], input[type="url"] {
   .brand-text p { display: none; }
   .view-head h2 { font-size: 1.3rem; }
   .view-sub { font-size: 0.82rem; }
-  .wishlist-grid { grid-template-columns: 1fr; }
+  .wishlist-grid { grid-template-columns: minmax(0, 1fr); }
 
   /* iOS zoom guard: inputs must be >= 16px */
   input[type="number"], input[type="text"], input[type="url"] { font-size: 16px; }
@@ -1220,6 +1222,11 @@ input[type="number"], input[type="text"], input[type="url"] {
   .toast { min-width: 0; justify-content: center; }
 
   .site-footer { font-size: 0.72rem; line-height: 1.6; }
+}
+
+/* Extra small screens */
+@media (max-width: 420px) {
+  .planned-actions { flex: 1 1 100%; margin-left: 0; justify-content: flex-end; }
 }
 
 /* Extra small screens */
