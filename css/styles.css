@@ -1121,6 +1121,46 @@ input[type="number"], input[type="text"], input[type="url"] {
 
 #importArea { min-height: 150px; }
 
+.import-file {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.import-file-name {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.import-file-btn-svg { width: 17px; height: 17px; }
+
+.import-or {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-faint);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  margin: 4px 0 12px;
+}
+
+.import-or::before,
+.import-or::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
 @media (max-width: 600px) {
   .data-options { grid-template-columns: 1fr; }
 }

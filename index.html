@@ -1140,6 +1140,46 @@ input[type="number"], input[type="text"], input[type="url"] {
 
 #importArea { min-height: 150px; }
 
+.import-file {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.import-file-name {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.import-file-btn-svg { width: 17px; height: 17px; }
+
+.import-or {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-faint);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  margin: 4px 0 12px;
+}
+
+.import-or::before,
+.import-or::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
 @media (max-width: 600px) {
   .data-options { grid-template-columns: 1fr; }
 }
@@ -1620,9 +1660,18 @@ input[type="number"], input[type="text"], input[type="url"] {
       <div id="importPanel" style="display:none">
         <div class="data-subhead">
           <button class="btn btn-ghost btn-sm data-back">Back</button>
-          <h4>Paste your exported data</h4>
+          <h4>Import wishlist</h4>
         </div>
-        <p class="modal-body-text">Supports JSON (full restore), CSV or plain text. Importing replaces your current wishlist.</p>
+        <p class="modal-body-text">Choose a file from your device or paste the exported text. Importing replaces your current wishlist.</p>
+        <div class="import-file">
+          <input type="file" id="importFile" accept=".json,.csv,.txt,application/json,text/csv,text/plain" hidden />
+          <button class="btn btn-ghost" id="importFileBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M7 11l5-5 5 5"/><path d="M12 6v12"/></svg>
+            Choose file from device
+          </button>
+          <span class="import-file-name" id="importFileName">No file selected</span>
+        </div>
+        <div class="import-or"><span>or paste</span></div>
         <textarea id="importArea" placeholder="Paste the exported text here..."></textarea>
         <div class="modal-actions">
           <button class="btn btn-primary" id="confirmImportBtn">Import</button>
@@ -2344,6 +2393,8 @@ input[type="number"], input[type="text"], input[type="url"] {
   const importPanel = $('#importPanel');
   const exportPreview = $('#exportPreview');
   const importArea = $('#importArea');
+  const importFile = $('#importFile');
+  const importFileName = $('#importFileName');
   const fmtMeta = {
     text: { name: 'wishlist.txt', mime: 'text/plain' },
     csv: { name: 'wishlist.csv', mime: 'text/csv' },
@@ -2356,7 +2407,11 @@ input[type="number"], input[type="text"], input[type="url"] {
     dataMenu.style.display = which === 'menu' ? '' : 'none';
     exportPanel.style.display = which === 'export' ? '' : 'none';
     importPanel.style.display = which === 'import' ? '' : 'none';
-    if (which === 'import') importArea.value = '';
+    if (which === 'import') {
+      importArea.value = '';
+      importFile.value = '';
+      importFileName.textContent = 'No file selected';
+    }
   }
 
   $('#exportDataBtn').addEventListener('click', () => {
@@ -2508,9 +2563,24 @@ input[type="number"], input[type="text"], input[type="url"] {
     return { ok: false, msg: 'Could not understand that data. Paste a JSON, CSV or text export.' };
   }
 
+  $('#importFileBtn').addEventListener('click', () => importFile.click());
+
+  importFile.addEventListener('change', () => {
+    const file = importFile.files && importFile.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      importArea.value = String(reader.result || '');
+      importFileName.textContent = file.name;
+      toast('Loaded "' + file.name + '" - press Import to continue', 'info');
+    };
+    reader.onerror = () => toast('Could not read that file.', 'error');
+    reader.readAsText(file);
+  });
+
   $('#confirmImportBtn').addEventListener('click', () => {
     const text = importArea.value.trim();
-    if (!text) { toast('Paste some data first.', 'error'); return; }
+    if (!text) { toast('Choose a file or paste some data first.', 'error'); return; }
     const res = parseImport(text);
     if (!res.ok) { toast(res.msg, 'error'); return; }
     state = res.state;
