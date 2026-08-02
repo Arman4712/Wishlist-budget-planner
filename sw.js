@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wishlynk-cache-v1';
+const CACHE_NAME = 'wishlynk-cache-v2';
 
 const BASE_PATH = self.location.pathname.replace(/sw\.js$/, '');
 
