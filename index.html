@@ -548,6 +548,36 @@ body {
   border-radius: 20px;
   white-space: nowrap;
   align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  font-family: var(--font);
+  touch-action: manipulation;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.card-cat:hover {
+  background: rgba(79, 195, 255, 0.2);
+  border-color: rgba(79, 195, 255, 0.45);
+}
+
+.card-cat:active {
+  box-shadow: 0 0 0 2px rgba(79, 195, 255, 0.3);
+}
+
+.card-cat .cat-edit-ico {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.cat-modal-note {
+  margin: 0 0 14px;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.5;
 }
 
 .card-link-row {
@@ -634,14 +664,7 @@ body {
 .empty-state h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
 .empty-state p { color: var(--text-dim); font-size: 0.9rem; max-width: 380px; margin: 0 auto 20px; line-height: 1.6; }
 
-/* ============ MONTH TABS ============ */
-.month-tabs {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
+/* ============ MONTH SELECT ============ */
 .planner-toolbar {
   display: flex;
   align-items: center;
@@ -655,64 +678,6 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text-faint);
-}
-
-.month-tab {
-  position: relative;
-  padding: 14px 12px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-  font-family: var(--font);
-  cursor: pointer;
-  touch-action: manipulation;
-  text-align: left;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  transition: transform 0.2s, box-shadow 0.25s, border-color 0.25s;
-  overflow: hidden;
-}
-
-.month-tab:hover { transform: translateY(-2px); border-color: var(--border-strong); }
-
-.month-tab.active {
-  border-color: transparent;
-  background: var(--grad-primary);
-  box-shadow: 0 10px 30px rgba(124, 108, 255, 0.4);
-}
-
-.month-tab .month-tab-name {
-  display: block;
-  font-size: 0.95rem;
-  font-weight: 700;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.month-tab .month-tab-meta {
-  display: block;
-  margin-top: 5px;
-  font-size: 0.74rem;
-  color: var(--text-faint);
-}
-
-.month-tab.active .month-tab-meta { color: rgba(255, 255, 255, 0.75); }
-
-.month-tab .mini-bar {
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 3px;
-  background: rgba(255, 255, 255, 0.22);
-}
-
-.month-tab .mini-bar > i {
-  display: block;
-  height: 100%;
-  background: var(--accent);
-  border-radius: 0 2px 2px 0;
-  transition: width 0.5s ease;
 }
 
 /* ============ MONTH PANEL ============ */
@@ -1477,10 +1442,6 @@ input[type="number"], input[type="text"], input[type="url"] {
   input[type="number"], input[type="text"], input[type="url"] { font-size: 16px; }
   .month-name-input { font-size: 1.3rem; }
 
-  .month-tabs { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-  .month-tab { padding: 12px 10px; }
-  .month-tab-name { font-size: 0.88rem; }
-
   .budget-stats { gap: 8px; }
   .stat-card { padding: 13px 8px; }
   .stat-value { font-size: 1.12rem; }
@@ -1572,7 +1533,6 @@ input[type="number"], input[type="text"], input[type="url"] {
   .view-head h2 { font-size: 1.15rem; }
   .month-panel { padding: 14px; }
   .budget-stats { grid-template-columns: repeat(4, 1fr); }
-  .month-tabs { grid-template-columns: repeat(4, 1fr); }
   .modal { max-height: 90vh; }
   .pick-list { max-height: 52vh; }
 }
@@ -1687,8 +1647,6 @@ input[type="number"], input[type="text"], input[type="url"] {
             </span>
           </div>
         </div>
-
-        <div class="month-tabs" id="monthTabs" role="tablist"></div>
 
         <div class="month-panel glass" id="monthPanel">
           <div class="month-panel-head">
@@ -1869,6 +1827,27 @@ input[type="number"], input[type="text"], input[type="url"] {
           <button type="submit" class="btn btn-primary">Save Product</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- ============ CHANGE CATEGORY MODAL ============ -->
+  <div class="modal-overlay" id="catModal">
+    <div class="modal glass">
+      <div class="modal-head">
+        <h3>Change category</h3>
+        <button class="icon-btn modal-close" data-close>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <p class="cat-modal-note" id="catModalName"></p>
+      <div class="cat-options">
+        <label class="cat-option"><input type="radio" name="catPick" value="perfumes" />Perfumes</label>
+        <label class="cat-option"><input type="radio" name="catPick" value="gadgets" />Gadgets</label>
+        <label class="cat-option"><input type="radio" name="catPick" value="others" />Others</label>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" data-close>Cancel</button>
+      </div>
     </div>
   </div>
 
@@ -2130,7 +2109,10 @@ input[type="number"], input[type="text"], input[type="url"] {
           <span class="card-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</span>
           <span class="price-amount">${fmt(p.price)}</span>
           <div class="card-actions">
-            <span class="card-cat">${CATEGORY_NAMES[categoryOf(p)]}</span>
+            <button type="button" class="card-cat" data-act="cat" title="Change category">
+              ${CATEGORY_NAMES[categoryOf(p)]}
+              <svg class="cat-edit-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg>
+            </button>
             <button class="icon-btn remove-btn" data-act="remove" title="Remove product">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
             </button>
@@ -2272,13 +2254,41 @@ input[type="number"], input[type="text"], input[type="url"] {
 
     const act = btn.dataset.act;
     if (act === 'remove') removeProduct(card.dataset.id);
+    if (act === 'cat') openCatPicker(card.dataset.id);
+  });
+
+  // ---------- Change category ----------
+
+  let catEditId = null;
+
+  function openCatPicker(id) {
+    const p = state.wishlist.find((x) => x.id === id);
+    if (!p) return;
+    catEditId = id;
+    $('#catModalName').textContent = '\u201C' + p.name + '\u201D';
+    $$('input[name="catPick"]').forEach((r) => { r.checked = (r.value === categoryOf(p)); });
+    openModal($('#catModal'));
+  }
+
+  $('#catModal').addEventListener('change', (e) => {
+    if (!e.target.matches('input[name="catPick"]')) return;
+    if (!catEditId) return;
+    const p = state.wishlist.find((x) => x.id === catEditId);
+    if (!p) return;
+    const next = e.target.value;
+    if (categoryOf(p) !== next) {
+      p.category = next;
+      save();
+      renderWishlist();
+    }
+    closeModal($('#catModal'));
+    catEditId = null;
   });
 
   // ---------- Add product modal ----------
 
   const addModal = $('#addProductModal');
   const productForm = $('#productForm');
-
   function openAddModal() {
     productForm.reset();
     $('#pName').focus();
@@ -2345,7 +2355,6 @@ input[type="number"], input[type="text"], input[type="url"] {
 
   // ---------- Budget planner ----------
 
-  const monthTabs = $('#monthTabs');
   const plannerList = $('#plannerList');
   const plannerEmpty = $('#plannerEmpty');
   let currentMonth = 0;
@@ -2354,23 +2363,7 @@ input[type="number"], input[type="text"], input[type="url"] {
     return Object.values(m.items).reduce((a, b) => a + num(b), 0);
   }
 
-  function renderMonthTabs(preview) {
-    const editing = preview !== undefined;
-    monthTabs.innerHTML = '';
-    state.months.forEach((m, i) => {
-      const budget = editing && i === currentMonth ? num(preview) : m.budget;
-      const used = monthUtilised(m);
-      const pct = budget > 0 ? Math.min(100, (used / budget) * 100) : 0;
-      const tab = document.createElement('button');
-      tab.className = 'month-tab' + (i === currentMonth ? ' active' : '');
-      tab.dataset.idx = i;
-      tab.innerHTML = `
-        <span class="month-tab-name">${escapeHtml(m.name)}</span>
-        <span class="month-tab-meta">${fmt(used)} ${budget > 0 ? '/' + fmt(budget) : ''}</span>
-        <span class="mini-bar"><i style="width:${pct.toFixed(1)}%"></i></span>`;
-      monthTabs.appendChild(tab);
-    });
-
+  function renderMonthTabs() {
     const totalItems = state.months.reduce((a, m) => a + Object.keys(m.items).length, 0);
     const badge = $('#plannerBadge');
     badge.textContent = totalItems;
@@ -2388,15 +2381,6 @@ input[type="number"], input[type="text"], input[type="url"] {
       ms.value = String(currentMonth);
     }
   }
-
-  monthTabs.addEventListener('click', (e) => {
-    const tab = e.target.closest('.month-tab');
-    if (!tab) return;
-    commitBudget();
-    currentMonth = parseInt(tab.dataset.idx, 10);
-    renderMonthTabs();
-    renderPlanner();
-  });
 
   $('#monthSelect').addEventListener('change', (e) => {
     const idx = parseInt(e.target.value, 10);
@@ -2530,7 +2514,7 @@ input[type="number"], input[type="text"], input[type="url"] {
   $('#budgetInput').addEventListener('input', () => {
     const raw = $('#budgetInput').value;
     renderPlanner(raw);
-    renderMonthTabs(raw);
+    renderMonthTabs();
   });
 
   $('#budgetInput').addEventListener('change', commitBudget);
