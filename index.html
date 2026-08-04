@@ -417,6 +417,194 @@ body {
 
 #view-wishlist { padding-bottom: 120px; }
 
+/* ============ WISHLIST TOOLBAR (search + filter) ============ */
+.wishlist-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.search-wrap {
+  position: relative;
+  flex: 7;
+  min-width: 0;
+}
+
+.search-wrap .search-icon {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-faint);
+  display: inline-flex;
+  pointer-events: none;
+}
+
+.search-wrap .search-icon svg { width: 17px; height: 17px; }
+
+.search-input {
+  width: 100%;
+  font-family: var(--font);
+  font-size: 0.9rem;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 11px 40px 11px 38px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-input::placeholder { color: var(--text-faint); }
+.search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(124, 108, 255, 0.2); }
+
+.clear-search {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px; height: 28px;
+  border: none;
+  background: transparent;
+  color: var(--text-faint);
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s, visibility 0.2s;
+  touch-action: manipulation;
+}
+
+.search-wrap.has-text .clear-search { visibility: visible; opacity: 1; }
+.clear-search:hover { color: var(--text); background: rgba(255, 255, 255, 0.08); }
+.clear-search svg { width: 16px; height: 16px; }
+
+.filter-btn {
+  flex: 3;
+  min-width: 0;
+  position: relative;
+  gap: 7px;
+  padding: 11px 10px;
+  font-size: 0.88rem;
+  white-space: nowrap;
+}
+
+.filter-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+.filter-btn.active {
+  color: var(--text);
+  border-color: var(--primary);
+  background: rgba(124, 108, 255, 0.14);
+}
+
+.filter-badge {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 18px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  display: inline-grid;
+  place-items: center;
+}
+
+/* ============ FILTER MODAL ============ */
+.filter-section { margin-bottom: 18px; }
+
+.filter-section h4 {
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 11px;
+  cursor: pointer;
+  font-size: 0.92rem;
+  color: var(--text);
+  transition: background 0.2s;
+}
+
+.filter-option:hover { background: rgba(255, 255, 255, 0.05); }
+.filter-option input { accent-color: var(--primary); width: 17px; height: 17px; flex-shrink: 0; }
+
+.filter-cats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+
+.filter-note {
+  font-size: 0.78rem;
+  color: var(--text-faint);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+/* ============ DROP ZONES (drag to purchase / drag left to delete) ============ */
+.drop-zone {
+  position: fixed;
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--font);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s, background 0.2s;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.drop-zone.show { opacity: 1; pointer-events: auto; }
+.drop-zone svg { width: 22px; height: 22px; flex-shrink: 0; }
+
+#purchasedDropZone {
+  top: 0;
+  left: 0;
+  right: 0;
+  min-height: 58px;
+  padding: 10px 16px;
+  transform: translateY(-100%);
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.93), rgba(79, 195, 255, 0.93));
+  color: #fff;
+  font-size: 0.95rem;
+  box-shadow: 0 10px 30px rgba(52, 211, 153, 0.35);
+}
+
+#purchasedDropZone.show { transform: translateY(0); }
+#purchasedDropZone.drag-hover { background: linear-gradient(135deg, #34d399, #4fc3ff); }
+
+#deleteDropZone {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 96px;
+  transform: translateX(-100%);
+  flex-direction: column;
+  gap: 8px;
+  background: linear-gradient(180deg, rgba(239, 68, 68, 0.94), rgba(249, 115, 22, 0.94));
+  color: #fff;
+  font-size: 0.84rem;
+  box-shadow: 10px 0 30px rgba(239, 68, 68, 0.3);
+}
+
+#deleteDropZone.show { transform: translateX(0); }
+#deleteDropZone.drag-hover { background: linear-gradient(180deg, #ef4444, #f97316); }
+
 /* ============ GLASS ============ */
 .glass {
   background: var(--card);
@@ -525,6 +713,7 @@ body {
 }
 
 .card-actions .icon-btn.remove-btn:hover { color: var(--danger); border-color: rgba(248, 113, 113, 0.4); }
+.card-actions .icon-btn.purchased-btn:hover { color: var(--success); border-color: rgba(52, 211, 153, 0.4); }
 
 .card-top .price-amount {
   font-size: 1.05rem;
@@ -1347,6 +1536,89 @@ input[type="number"], input[type="text"], input[type="url"] {
   background: var(--primary);
 }
 
+/* ============ MORE TAB SUBVIEWS (purchased / deleted) ============ */
+.more-count {
+  min-width: 22px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 20px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: inline-grid;
+  place-items: center;
+  margin-right: 2px;
+  flex-shrink: 0;
+}
+
+.subview { padding-bottom: 60px; }
+
+.subview-back { margin-bottom: 16px; }
+
+.subview-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.subview-head h3 { font-size: 1.3rem; font-weight: 800; }
+.subview-head span { color: var(--text-dim); font-size: 0.85rem; }
+
+.item-list {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+}
+
+.item-list-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 10px;
+}
+
+.item-list-row + .item-list-row { border-top: 1px solid var(--border); }
+
+.row-icon {
+  width: 40px; height: 40px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  color: #fff;
+}
+
+.row-icon svg { width: 18px; height: 18px; }
+.row-icon.success { background: var(--grad-success); }
+.row-icon.danger { background: linear-gradient(135deg, #ef4444, #f97316); }
+.row-icon.neutral { background: var(--grad-primary); }
+
+.row-info { flex: 1; min-width: 0; }
+.row-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.row-meta { font-size: 0.8rem; color: var(--text-dim); margin-top: 3px; }
+.row-link {
+  font-size: 0.76rem;
+  color: var(--text-faint);
+  margin-top: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.row-restore:hover { color: var(--success); border-color: rgba(52, 211, 153, 0.4); }
+.row-recover:hover { color: var(--success); border-color: rgba(52, 211, 153, 0.4); }
+.row-purge:hover { color: var(--danger); border-color: rgba(248, 113, 113, 0.4); }
+
 @media (max-width: 600px) {
   .data-options { grid-template-columns: 1fr; }
 }
@@ -1499,9 +1771,8 @@ input[type="number"], input[type="text"], input[type="url"] {
   .modal-actions .btn { flex: 1; }
 
   .fab { right: 16px; bottom: calc(36px + env(safe-area-inset-bottom, 0px)); width: 56px; height: 56px; }
-  .view-head-actions { width: 100%; }
-  .view-head-actions .select-wrap { flex: 1; }
-  .view-head-actions .select { width: 100%; }
+  .wishlist-toolbar { gap: 8px; }
+  .filter-btn { padding: 11px 8px; font-size: 0.82rem; }
   .cat-option { flex: 1 1 30%; }
   .planner-toolbar { gap: 10px; }
 
@@ -1597,21 +1868,23 @@ input[type="number"], input[type="text"], input[type="url"] {
             <h2>My Wishlist</h2>
             <p class="view-sub" id="wishlistCount">0 products saved</p>
           </div>
-          <div class="view-head-actions">
-            <div class="select-wrap">
-              <select id="sortSelect" class="select" aria-label="Sort or filter products">
-                <option value="all">All items</option>
-                <option value="price-asc">Price: Low to High</option>
-                <option value="price-desc">Price: High to Low</option>
-                <option value="cat-perfumes">Perfumes</option>
-                <option value="cat-gadgets">Gadgets</option>
-                <option value="cat-others">Others</option>
-              </select>
-              <span class="select-chevron">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-              </span>
-            </div>
+        </div>
+
+        <div class="wishlist-toolbar">
+          <div class="search-wrap" id="searchWrap">
+            <span class="search-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            </span>
+            <input type="search" id="searchInput" class="search-input" placeholder="Search products..." aria-label="Search products" autocomplete="off" />
+            <button type="button" class="clear-search" id="clearSearchBtn" title="Clear search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
           </div>
+          <button type="button" class="btn btn-ghost filter-btn" id="filterBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+            <span class="filter-label">Filter</span>
+            <span class="filter-badge" id="filterBadge" hidden>0</span>
+          </button>
         </div>
 
         <div class="wishlist-grid" id="wishlistGrid">
@@ -1725,7 +1998,32 @@ input[type="number"], input[type="text"], input[type="url"] {
           </div>
         </div>
 
+        <div id="moreMain">
         <div class="more-list glass">
+          <button class="more-row" id="morePurchasedBtn">
+            <span class="more-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+            </span>
+            <span class="more-text">
+              <strong>Purchased Items</strong>
+              <span>Products you have marked as bought</span>
+            </span>
+            <span class="more-count" id="purchasedCount" hidden>0</span>
+            <span class="more-chev">&#8250;</span>
+          </button>
+
+          <button class="more-row warn" id="moreDeletedBtn">
+            <span class="more-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </span>
+            <span class="more-text">
+              <strong>Deleted Items</strong>
+              <span>Recover products you removed by dragging left</span>
+            </span>
+            <span class="more-count" id="deletedCount" hidden>0</span>
+            <span class="more-chev">&#8250;</span>
+          </button>
+
           <button class="more-row" id="moreImportBtn">
             <span class="more-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 8l5-5 5 5"/><path d="M12 3v12"/></svg>
@@ -1765,16 +2063,45 @@ input[type="number"], input[type="text"], input[type="url"] {
           <p>Everything is saved only in this browser&apos;s storage. There is no account and no server &mdash; your wishlist and budgets never leave your device unless you export them.</p>
         </div>
 
-        <div class="more-info glass">
+        <div class="more-info glass" id="moreMainTips">
           <h4>Quick tips</h4>
           <ul>
             <li>Tap the + button on the Wishlist tab to add a product.</li>
             <li>Use the Budget Planner to set a monthly budget and pick items within it.</li>
-            <li>Sort or filter your wishlist with the dropdown above the list.</li>
+            <li>Use search and the Filter button above the list to narrow down products.</li>
+            <li>Drag a product onto the "Purchased" bar to mark it as bought.</li>
+            <li>Drag a product to the left edge to delete it (recoverable from Deleted Items).</li>
             <li>Export your wishlist to keep a backup in your notes app.</li>
             <li>Install WishLynk from your browser menu to use it like an app.</li>
           </ul>
         </div>
+      </div>
+
+      <!-- ============ PURCHASED SUBVIEW ============ -->
+      <div class="subview" id="purchasedView" hidden>
+        <button class="btn btn-ghost subview-back" data-back="moreMain">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          Back
+        </button>
+        <div class="subview-head">
+          <h3>Purchased Items</h3>
+          <span id="purchasedSubCount">0 items</span>
+        </div>
+        <div class="item-list glass" id="purchasedList"></div>
+      </div>
+
+      <!-- ============ DELETED SUBVIEW ============ -->
+      <div class="subview" id="deletedView" hidden>
+        <button class="btn btn-ghost subview-back" data-back="moreMain">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          Back
+        </button>
+        <div class="subview-head">
+          <h3>Deleted Items</h3>
+          <span id="deletedSubCount">0 items</span>
+        </div>
+        <div class="item-list glass" id="deletedList"></div>
+      </div>
       </section>
     </main>
 
@@ -1786,6 +2113,17 @@ input[type="number"], input[type="text"], input[type="url"] {
   <button class="fab" id="addProductBtn" title="Add product" aria-label="Add product">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
   </button>
+
+  <!-- ============ DRAG DROP ZONES ============ -->
+  <div class="drop-zone" id="purchasedDropZone">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+    <span>Drop here to move to Purchased</span>
+  </div>
+
+  <div class="drop-zone" id="deleteDropZone">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+    <span>Delete</span>
+  </div>
 
   <!-- ============ ADD PRODUCT MODAL ============ -->
   <div class="modal-overlay" id="addProductModal">
@@ -1819,6 +2157,9 @@ input[type="number"], input[type="text"], input[type="url"] {
           <div class="cat-options">
             <label class="cat-option"><input type="radio" name="pCategory" value="perfumes" />Perfumes</label>
             <label class="cat-option"><input type="radio" name="pCategory" value="gadgets" />Gadgets</label>
+            <label class="cat-option"><input type="radio" name="pCategory" value="beauty" />Beauty</label>
+            <label class="cat-option"><input type="radio" name="pCategory" value="health" />Health</label>
+            <label class="cat-option"><input type="radio" name="pCategory" value="attar" />Attar</label>
             <label class="cat-option"><input type="radio" name="pCategory" value="others" checked />Others</label>
           </div>
         </div>
@@ -1843,10 +2184,50 @@ input[type="number"], input[type="text"], input[type="url"] {
       <div class="cat-options">
         <label class="cat-option"><input type="radio" name="catPick" value="perfumes" />Perfumes</label>
         <label class="cat-option"><input type="radio" name="catPick" value="gadgets" />Gadgets</label>
+        <label class="cat-option"><input type="radio" name="catPick" value="beauty" />Beauty</label>
+        <label class="cat-option"><input type="radio" name="catPick" value="health" />Health</label>
+        <label class="cat-option"><input type="radio" name="catPick" value="attar" />Attar</label>
         <label class="cat-option"><input type="radio" name="catPick" value="others" />Others</label>
       </div>
       <div class="modal-actions">
         <button class="btn btn-ghost" data-close>Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ FILTER / SORT MODAL ============ -->
+  <div class="modal-overlay" id="filterModal">
+    <div class="modal glass">
+      <div class="modal-head">
+        <h3>Filter &amp; Sort</h3>
+        <button class="icon-btn modal-close" data-close>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="filter-section">
+        <h4>Sort by</h4>
+        <label class="filter-option"><input type="radio" name="fSort" value="default" checked />Default order</label>
+        <label class="filter-option"><input type="radio" name="fSort" value="price-asc" />Price: Low to High</label>
+        <label class="filter-option"><input type="radio" name="fSort" value="price-desc" />Price: High to Low</label>
+      </div>
+
+      <div class="filter-section">
+        <h4>Categories (pick any combination)</h4>
+        <div class="filter-cats">
+          <label class="filter-option"><input type="checkbox" name="fCat" value="perfumes" />Perfumes</label>
+          <label class="filter-option"><input type="checkbox" name="fCat" value="gadgets" />Gadgets</label>
+          <label class="filter-option"><input type="checkbox" name="fCat" value="beauty" />Beauty</label>
+          <label class="filter-option"><input type="checkbox" name="fCat" value="health" />Health</label>
+          <label class="filter-option"><input type="checkbox" name="fCat" value="attar" />Attar</label>
+          <label class="filter-option"><input type="checkbox" name="fCat" value="others" />Others</label>
+        </div>
+        <p class="filter-note">No category ticked means all categories. Combine with a sort for results like &quot;price low to high + Perfumes&quot;.</p>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="filterClearBtn">Clear</button>
+        <button class="btn btn-primary" id="filterApplyBtn">Apply</button>
       </div>
     </div>
   </div>
@@ -1976,7 +2357,7 @@ input[type="number"], input[type="text"], input[type="url"] {
   const num = (v) => { const n = parseFloat(v); return Number.isFinite(n) && n > 0 ? n : 0; };
   const fmt = (n) => '\u20B9' + Number(n || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 });
 
-  const CATEGORY_NAMES = { perfumes: 'Perfumes', gadgets: 'Gadgets', others: 'Others' };
+  const CATEGORY_NAMES = { perfumes: 'Perfumes', gadgets: 'Gadgets', others: 'Others', beauty: 'Beauty', health: 'Health', attar: 'Attar' };
   const categoryOf = (p) => (p.category && CATEGORY_NAMES[p.category] ? p.category : 'others');
 
   function defaultMonths() {
@@ -1997,10 +2378,14 @@ input[type="number"], input[type="text"], input[type="url"] {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const d = JSON.parse(raw);
-        if (d && Array.isArray(d.wishlist) && Array.isArray(d.months) && d.months.length) return d;
+        if (d && Array.isArray(d.wishlist) && Array.isArray(d.months) && d.months.length) {
+          if (!Array.isArray(d.purchased)) d.purchased = [];
+          if (!Array.isArray(d.deleted)) d.deleted = [];
+          return d;
+        }
       }
     } catch (e) { /* corrupted */ }
-    return { wishlist: [], months: defaultMonths() };
+    return { wishlist: [], months: defaultMonths(), purchased: [], deleted: [] };
   }
 
   function save() {
@@ -2055,26 +2440,35 @@ input[type="number"], input[type="text"], input[type="url"] {
   const wishlistGrid = $('#wishlistGrid');
   const wishlistEmpty = $('#wishlistEmpty');
 
-  let sortMode = 'all';
+  let searchQuery = '';
+  let filterSort = 'default';
+  let filterCats = new Set();
 
-  function applySort(list) {
-    const working = [...list];
-    if (sortMode === 'price-asc') working.sort((a, b) => num(a.price) - num(b.price));
-    else if (sortMode === 'price-desc') working.sort((a, b) => num(b.price) - num(a.price));
-    else if (sortMode.startsWith('cat-')) {
-      const cat = sortMode.slice(4);
-      return working.filter((p) => categoryOf(p) === cat);
+  function isConstrained() {
+    return !!searchQuery || filterCats.size > 0 || filterSort !== 'default';
+  }
+
+  function getVisibleList() {
+    let working = [...state.wishlist];
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      working = working.filter((p) =>
+        String(p.name).toLowerCase().includes(q) || String(p.link).toLowerCase().includes(q));
     }
+    if (filterCats.size) {
+      working = working.filter((p) => filterCats.has(categoryOf(p)));
+    }
+    if (filterSort === 'price-asc') working.sort((a, b) => num(a.price) - num(b.price));
+    else if (filterSort === 'price-desc') working.sort((a, b) => num(b.price) - num(a.price));
     return working;
   }
 
   function renderWishlist() {
     const total = state.wishlist.length;
-    const filtering = sortMode.startsWith('cat-');
-    const list = applySort(state.wishlist);
-    const sorted = sortMode !== 'all';
+    const constrained = isConstrained();
+    const list = getVisibleList();
 
-    $('#wishlistCount').textContent = filtering
+    $('#wishlistCount').textContent = constrained
       ? list.length + ' of ' + total + ' product' + (total === 1 ? '' : 's')
       : total + ' product' + (total === 1 ? '' : 's') + ' saved';
 
@@ -2082,10 +2476,10 @@ input[type="number"], input[type="text"], input[type="url"] {
     wishlistEmpty.remove();
 
     if (!list.length) {
-      if (filtering) {
+      if (constrained) {
         const none = document.createElement('div');
         none.className = 'empty-state compact';
-        none.innerHTML = '<div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/></svg></div><h3>No items in this category</h3><p>Try a different filter, or add new products.</p>';
+        none.innerHTML = '<div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div><h3>No matching products</h3><p>Try a different search or clear your filters.</p>';
         wishlistGrid.appendChild(none);
       } else {
         wishlistGrid.appendChild(wishlistEmpty);
@@ -2098,13 +2492,12 @@ input[type="number"], input[type="text"], input[type="url"] {
       const card = document.createElement('article');
       card.className = 'product-card';
       card.dataset.id = p.id;
-      card.draggable = !sorted && !('ontouchstart' in window);
-      const handle = sorted
-        ? ''
-        : '<span class="drag-handle" title="Drag to reorder"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg></span>';
+      card.draggable = !('ontouchstart' in window);
       card.innerHTML = `
         <div class="card-top">
-          ${handle}
+          <span class="drag-handle" title="Drag to reorder or move">
+            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>
+          </span>
           <span class="card-badge">${i + 1}</span>
           <span class="card-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</span>
           <span class="price-amount">${fmt(p.price)}</span>
@@ -2113,7 +2506,10 @@ input[type="number"], input[type="text"], input[type="url"] {
               ${CATEGORY_NAMES[categoryOf(p)]}
               <svg class="cat-edit-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg>
             </button>
-            <button class="icon-btn remove-btn" data-act="remove" title="Remove product">
+            <button type="button" class="icon-btn purchased-btn" data-act="purchased" title="Mark as purchased">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+            </button>
+            <button type="button" class="icon-btn remove-btn" data-act="remove" title="Remove product">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
             </button>
           </div>
@@ -2148,37 +2544,115 @@ input[type="number"], input[type="text"], input[type="url"] {
     renderWishlist();
   }
 
-  function removeProduct(id) {
+  function markPurchased(id) {
     const p = state.wishlist.find((x) => x.id === id);
+    if (!p) return;
     state.wishlist = state.wishlist.filter((x) => x.id !== id);
+    state.purchased.push(Object.assign({}, p, { purchasedAt: Date.now() }));
     state.months.forEach((m) => { delete m.items[id]; });
     save();
     renderWishlist();
     renderMonthTabs();
     renderPlanner();
-    toast((p ? '\u201C' + p.name + '\u201D' : 'Product') + ' removed from wishlist', 'info');
+    updateMoreBadges();
+    toast('\u201C' + p.name + '\u201D' + ' marked as purchased', 'success');
+  }
+
+  function restorePurchased(id) {
+    const idx = state.purchased.findIndex((x) => x.id === id);
+    if (idx < 0) return;
+    const p = state.purchased[idx];
+    state.purchased.splice(idx, 1);
+    state.wishlist.push(p);
+    save();
+    renderWishlist();
+    renderPurchasedList();
+    updateMoreBadges();
+    toast('\u201C' + p.name + '\u201D' + ' moved back to wishlist', 'info');
+  }
+
+  function deleteProduct(id) {
+    const p = state.wishlist.find((x) => x.id === id);
+    if (!p) return;
+    state.wishlist = state.wishlist.filter((x) => x.id !== id);
+    state.deleted.push(Object.assign({}, p, { deletedAt: Date.now() }));
+    state.months.forEach((m) => { delete m.items[id]; });
+    save();
+    renderWishlist();
+    renderMonthTabs();
+    renderPlanner();
+    updateMoreBadges();
+    toast('\u201C' + p.name + '\u201D' + ' moved to Deleted Items', 'info');
+  }
+
+  function recoverDeleted(id) {
+    const idx = state.deleted.findIndex((x) => x.id === id);
+    if (idx < 0) return;
+    const p = state.deleted[idx];
+    state.deleted.splice(idx, 1);
+    state.wishlist.push(p);
+    save();
+    renderWishlist();
+    renderDeletedList();
+    updateMoreBadges();
+    toast('\u201C' + p.name + '\u201D' + ' restored to wishlist', 'success');
+  }
+
+  function purgeDeleted(id) {
+    const idx = state.deleted.findIndex((x) => x.id === id);
+    if (idx < 0) return;
+    const p = state.deleted[idx];
+    state.deleted.splice(idx, 1);
+    save();
+    renderDeletedList();
+    updateMoreBadges();
+    toast('\u201C' + p.name + '\u201D' + ' permanently deleted', 'info');
   }
 
   // ---------- Drag & drop ----------
 
   let dragId = null;
+  let dragConstrained = false;
+
+  const purchasedDropZone = $('#purchasedDropZone');
+  const deleteDropZone = $('#deleteDropZone');
+
+  function showDropZones(show) {
+    if (purchasedDropZone) purchasedDropZone.classList.toggle('show', show);
+    if (deleteDropZone) deleteDropZone.classList.remove('show', 'drag-hover');
+  }
+
+  function setDeleteZoneVisible(show) {
+    if (!deleteDropZone) return;
+    deleteDropZone.classList.toggle('show', show);
+    if (!show) deleteDropZone.classList.remove('drag-hover');
+  }
 
   wishlistGrid.addEventListener('dragstart', (e) => {
     const card = e.target.closest('.product-card');
     if (!card || card.draggable === false) return;
     dragId = card.dataset.id;
+    dragConstrained = isConstrained();
     card.classList.add('dragging');
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/plain', dragId);
+    showDropZones(true);
   });
 
   wishlistGrid.addEventListener('dragend', () => {
     dragId = null;
+    showDropZones(false);
     $$('.product-card').forEach((c) => c.classList.remove('dragging', 'drag-over'));
+  });
+
+  document.addEventListener('dragover', (e) => {
+    if (!dragId) return;
+    setDeleteZoneVisible(e.clientX < window.innerWidth * 0.18);
   });
 
   wishlistGrid.addEventListener('dragover', (e) => {
     e.preventDefault();
+    if (dragConstrained) return;
     const card = e.target.closest('.product-card');
     if (!card || !dragId) return;
     $$('.product-card').forEach((c) => c.classList.remove('drag-over'));
@@ -2189,10 +2663,41 @@ input[type="number"], input[type="text"], input[type="url"] {
   wishlistGrid.addEventListener('drop', (e) => {
     e.preventDefault();
     const card = e.target.closest('.product-card');
-    if (card && dragId) reorder(dragId, card.dataset.id);
+    if (card && dragId && !dragConstrained) reorder(dragId, card.dataset.id);
     dragId = null;
+    showDropZones(false);
     $$('.product-card').forEach((c) => c.classList.remove('dragging', 'drag-over'));
   });
+
+  if (purchasedDropZone) {
+    purchasedDropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      purchasedDropZone.classList.add('drag-hover');
+    });
+    purchasedDropZone.addEventListener('dragleave', () => purchasedDropZone.classList.remove('drag-hover'));
+    purchasedDropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      if (dragId) markPurchased(dragId);
+      dragId = null;
+      showDropZones(false);
+      $$('.product-card').forEach((c) => c.classList.remove('dragging', 'drag-over'));
+    });
+  }
+
+  if (deleteDropZone) {
+    deleteDropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      deleteDropZone.classList.add('drag-hover');
+    });
+    deleteDropZone.addEventListener('dragleave', () => deleteDropZone.classList.remove('drag-hover'));
+    deleteDropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      if (dragId) deleteProduct(dragId);
+      dragId = null;
+      showDropZones(false);
+      $$('.product-card').forEach((c) => c.classList.remove('dragging', 'drag-over'));
+    });
+  }
 
   // Touch drag & drop (HTML5 DnD does not work on touch devices)
   let touchDrag = null;
@@ -2204,6 +2709,7 @@ input[type="number"], input[type="text"], input[type="url"] {
     if (!card) return;
     const t = e.touches[0];
     touchDrag = { id: card.dataset.id, card, startX: t.clientX, startY: t.clientY, moved: false };
+    dragConstrained = isConstrained();
   }, { passive: true });
 
   wishlistGrid.addEventListener('touchmove', (e) => {
@@ -2215,13 +2721,15 @@ input[type="number"], input[type="text"], input[type="url"] {
     if (!touchDrag.moved) {
       touchDrag.moved = true;
       touchDrag.card.classList.add('dragging');
+      showDropZones(true);
       e.preventDefault();
     }
     touchDrag.card.style.transform = 'translate(' + dx + 'px,' + dy + 'px) rotate(1.5deg)';
+    setDeleteZoneVisible(touchDrag.startX - t.clientX > 60);
     const el = document.elementFromPoint(t.clientX, t.clientY);
     const over = el && el.closest('.product-card');
     $$('.product-card').forEach((c) => c.classList.remove('drag-over'));
-    if (over && over !== touchDrag.card) over.classList.add('drag-over');
+    if (over && over !== touchDrag.card && !dragConstrained) over.classList.add('drag-over');
   }, { passive: false });
 
   function endTouchDrag(e) {
@@ -2230,10 +2738,17 @@ input[type="number"], input[type="text"], input[type="url"] {
       const t = e.changedTouches[0];
       const el = document.elementFromPoint(t.clientX, t.clientY);
       const over = el && el.closest('.product-card');
-      if (over && over.dataset.id !== touchDrag.id) reorder(touchDrag.id, over.dataset.id);
+      if (el && el.closest('#deleteDropZone')) {
+        deleteProduct(touchDrag.id);
+      } else if (el && el.closest('#purchasedDropZone')) {
+        markPurchased(touchDrag.id);
+      } else if (over && over.dataset.id !== touchDrag.id && !dragConstrained) {
+        reorder(touchDrag.id, over.dataset.id);
+      }
     }
     touchDrag.card.classList.remove('dragging');
     touchDrag.card.style.transform = '';
+    showDropZones(false);
     $$('.product-card').forEach((c) => c.classList.remove('drag-over'));
     touchDrag = null;
   }
@@ -2253,7 +2768,8 @@ input[type="number"], input[type="text"], input[type="url"] {
     }
 
     const act = btn.dataset.act;
-    if (act === 'remove') removeProduct(card.dataset.id);
+    if (act === 'purchased') markPurchased(card.dataset.id);
+    if (act === 'remove') deleteProduct(card.dataset.id);
     if (act === 'cat') openCatPicker(card.dataset.id);
   });
 
@@ -2350,7 +2866,179 @@ input[type="number"], input[type="text"], input[type="url"] {
       $('#' + target).classList.add('active');
       const fab = $('#addProductBtn');
       if (fab) fab.classList.toggle('hidden', btn.dataset.tab !== 'wishlist');
+      if (btn.dataset.tab === 'more') resetMoreSubview();
     });
+  });
+
+  // ---------- More tab: purchased / deleted subviews ----------
+
+  function resetMoreSubview() {
+    const moreMain = $('#moreMain');
+    if (moreMain) moreMain.style.display = '';
+    $$('.subview').forEach((s) => { s.hidden = true; });
+    updateMoreBadges();
+  }
+
+  function updateMoreBadges() {
+    const pb = $('#purchasedCount');
+    const db = $('#deletedCount');
+    if (pb) { pb.textContent = state.purchased.length; pb.style.display = state.purchased.length ? 'inline-grid' : 'none'; }
+    if (db) { db.textContent = state.deleted.length; db.style.display = state.deleted.length ? 'inline-grid' : 'none'; }
+  }
+
+  function showMoreSubview(which) {
+    const moreMain = $('#moreMain');
+    if (moreMain) moreMain.style.display = 'none';
+    $$('.subview').forEach((s) => { s.hidden = true; });
+    const el = $('#' + which);
+    if (el) el.hidden = false;
+  }
+
+  function renderPurchasedList() {
+    const list = $('#purchasedList');
+    if (!list) return;
+    const sub = $('#purchasedSubCount');
+    if (sub) sub.textContent = state.purchased.length + ' item' + (state.purchased.length === 1 ? '' : 's');
+    list.innerHTML = '';
+    if (!state.purchased.length) {
+      list.innerHTML = '<div class="empty-state compact"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg></div><h3>Nothing purchased yet</h3><p>Tap the checkmark on a product or drag it onto the "Purchased" bar to move it here.</p></div>';
+      return;
+    }
+    const frag = document.createDocumentFragment();
+    state.purchased.forEach((p) => {
+      const row = document.createElement('div');
+      row.className = 'item-list-row';
+      row.innerHTML = `
+        <span class="row-icon success">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        </span>
+        <div class="row-info">
+          <div class="row-name" title="${escapeAttr(p.name)}">${escapeHtml(p.name)}</div>
+          <div class="row-meta">${CATEGORY_NAMES[categoryOf(p)]} &middot; ${fmt(p.price)}</div>
+          <div class="row-link" title="${escapeAttr(p.link)}">${escapeHtml(p.link)}</div>
+        </div>
+        <button type="button" class="icon-btn row-restore" data-id="${p.id}" title="Move back to wishlist">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>`;
+      frag.appendChild(row);
+    });
+    list.appendChild(frag);
+  }
+
+  function renderDeletedList() {
+    const list = $('#deletedList');
+    if (!list) return;
+    const sub = $('#deletedSubCount');
+    if (sub) sub.textContent = state.deleted.length + ' item' + (state.deleted.length === 1 ? '' : 's');
+    list.innerHTML = '';
+    if (!state.deleted.length) {
+      list.innerHTML = '<div class="empty-state compact"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div><h3>No deleted items</h3><p>Drag a product to the left edge of the screen to delete it. Deleted products can be recovered here.</p></div>';
+      return;
+    }
+    const frag = document.createDocumentFragment();
+    state.deleted.forEach((p) => {
+      const row = document.createElement('div');
+      row.className = 'item-list-row';
+      row.innerHTML = `
+        <span class="row-icon danger">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </span>
+        <div class="row-info">
+          <div class="row-name" title="${escapeAttr(p.name)}">${escapeHtml(p.name)}</div>
+          <div class="row-meta">${CATEGORY_NAMES[categoryOf(p)]} &middot; ${fmt(p.price)}</div>
+          <div class="row-link" title="${escapeAttr(p.link)}">${escapeHtml(p.link)}</div>
+        </div>
+        <button type="button" class="icon-btn row-recover" data-id="${p.id}" title="Recover to wishlist">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>
+        <button type="button" class="icon-btn row-purge" data-id="${p.id}" title="Delete permanently">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M10 11v6M14 11v6"/></svg>
+        </button>`;
+      frag.appendChild(row);
+    });
+    list.appendChild(frag);
+  }
+
+  $('#morePurchasedBtn').addEventListener('click', () => {
+    showMoreSubview('purchasedView');
+    renderPurchasedList();
+  });
+
+  $('#moreDeletedBtn').addEventListener('click', () => {
+    showMoreSubview('deletedView');
+    renderDeletedList();
+  });
+
+  $$('.subview-back').forEach((btn) => btn.addEventListener('click', resetMoreSubview));
+
+  $('#purchasedList').addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    if (btn.classList.contains('row-restore')) restorePurchased(btn.dataset.id);
+  });
+
+  $('#deletedList').addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    if (btn.classList.contains('row-recover')) recoverDeleted(btn.dataset.id);
+    else if (btn.classList.contains('row-purge')) purgeDeleted(btn.dataset.id);
+  });
+
+  // ---------- Search & filter ----------
+
+  const searchInput = $('#searchInput');
+  const searchWrap = $('#searchWrap');
+
+  function syncSearchClear() {
+    if (searchWrap) searchWrap.classList.toggle('has-text', !!searchInput.value);
+  }
+
+  searchInput.addEventListener('input', () => {
+    searchQuery = searchInput.value.trim();
+    syncSearchClear();
+    renderWishlist();
+  });
+
+  $('#clearSearchBtn').addEventListener('click', () => {
+    searchInput.value = '';
+    searchQuery = '';
+    syncSearchClear();
+    renderWishlist();
+    searchInput.focus();
+  });
+
+  const filterModal = $('#filterModal');
+
+  function syncFilterBadge() {
+    const n = filterCats.size + (filterSort !== 'default' ? 1 : 0);
+    const badge = $('#filterBadge');
+    if (badge) { badge.textContent = n; badge.hidden = n === 0; }
+    const fb = $('#filterBtn');
+    if (fb) fb.classList.toggle('active', n > 0);
+  }
+
+  $('#filterBtn').addEventListener('click', () => {
+    $$('input[name="fSort"]').forEach((r) => { r.checked = (r.value === filterSort); });
+    $$('input[name="fCat"]').forEach((c) => { c.checked = filterCats.has(c.value); });
+    openModal(filterModal);
+  });
+
+  $('#filterApplyBtn').addEventListener('click', () => {
+    const checkedSort = document.querySelector('input[name="fSort"]:checked');
+    filterSort = checkedSort ? checkedSort.value : 'default';
+    filterCats = new Set();
+    $$('input[name="fCat"]:checked').forEach((c) => filterCats.add(c.value));
+    syncFilterBadge();
+    closeModal(filterModal);
+    renderWishlist();
+  });
+
+  $('#filterClearBtn').addEventListener('click', () => {
+    filterSort = 'default';
+    filterCats = new Set();
+    syncFilterBadge();
+    closeModal(filterModal);
+    renderWishlist();
   });
 
   // ---------- Budget planner ----------
@@ -2688,10 +3376,11 @@ input[type="number"], input[type="text"], input[type="url"] {
 
   $('#confirmResetBtn').addEventListener('click', () => {
     localStorage.removeItem(STORAGE_KEY);
-    state = { wishlist: [], months: defaultMonths() };
+    state = { wishlist: [], months: defaultMonths(), purchased: [], deleted: [] };
     currentMonth = 0;
     save();
     closeModal(resetModal);
+    resetMoreSubview();
     renderWishlist();
     renderMonthTabs();
     renderPlanner();
@@ -2818,13 +3507,16 @@ input[type="number"], input[type="text"], input[type="url"] {
   }
 
   function sanitizeState(d) {
-    const wishlist = (d.wishlist || []).filter((p) => p && p.name).map((p) => ({
+    const sanitizeItem = (p) => ({
       id: p.id || uid(),
       name: String(p.name),
       price: num(p.price),
       link: String(p.link || ''),
       category: categoryOf(p)
-    }));
+    });
+    const wishlist = (d.wishlist || []).filter((p) => p && p.name).map(sanitizeItem);
+    const purchased = (d.purchased || []).filter((p) => p && p.name).map(sanitizeItem);
+    const deleted = (d.deleted || []).filter((p) => p && p.name).map(sanitizeItem);
     const months = (d.months && d.months.length)
       ? d.months.map((m) => ({
           id: m.id || uid(),
@@ -2833,7 +3525,7 @@ input[type="number"], input[type="text"], input[type="url"] {
           items: m.items && typeof m.items === 'object' ? m.items : {}
         }))
       : defaultMonths();
-    return { wishlist, months };
+    return { wishlist, purchased, deleted, months };
   }
 
   function parseImport(text) {
@@ -2918,11 +3610,6 @@ input[type="number"], input[type="text"], input[type="url"] {
   $('#addProductBtn').addEventListener('click', openAddModal);
   $('#wishlistEmpty .btn').addEventListener('click', openAddModal);
 
-  $('#sortSelect').addEventListener('change', (e) => {
-    sortMode = e.target.value;
-    renderWishlist();
-  });
-
   if (navigator.storage && navigator.storage.persist) {
     navigator.storage.persist().then((granted) => {
       console.log(granted
@@ -2931,9 +3618,12 @@ input[type="number"], input[type="text"], input[type="url"] {
     }).catch(() => {});
   }
 
+  syncFilterBadge();
+  syncSearchClear();
   renderWishlist();
   renderMonthTabs();
   renderPlanner();
+  updateMoreBadges();
 
   // Register the service worker so the app can be installed as a PWA
   // and work offline.
